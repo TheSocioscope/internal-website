@@ -1,0 +1,8 @@
+node_modules/
+.env.local
+.env
+frontend/.next/
+frontend/out/
+infrastructure/cdk.out/
+infrastructure/dist/
+*.js.map
