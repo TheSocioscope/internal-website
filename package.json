@@ -1,0 +1,11 @@
+{
+  "name": "socioscope-portal",
+  "private": true,
+  "workspaces": ["frontend", "backend", "infrastructure"],
+  "scripts": {
+    "dev": "cd frontend && npm run dev",
+    "build": "cd frontend && npm run build",
+    "deploy:infra": "cd infrastructure && npx cdk deploy",
+    "deploy:frontend": "cd frontend && npm run deploy"
+  }
+}

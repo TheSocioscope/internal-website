@@ -1,0 +1,165 @@
+.browser {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.uploadZone {
+  border: 1.5px dashed var(--color-border-strong);
+  border-radius: var(--radius-md);
+  padding: 1.5rem;
+  text-align: center;
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s;
+  margin-bottom: 1.25rem;
+  background: var(--color-paper);
+}
+
+.uploadZone:hover {
+  background: var(--color-accent-light);
+  border-color: var(--color-accent-muted);
+}
+
+.uploadZoneDragging {
+  background: var(--color-accent-light);
+  border-color: var(--color-accent);
+}
+
+.uploadZoneUploading {
+  opacity: 0.6;
+  cursor: default;
+}
+
+.uploadLabel {
+  font-size: 13.5px;
+  color: var(--color-warm-gray);
+}
+
+.search {
+  width: 100%;
+  padding: 8px 12px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  font-size: 14px;
+  font-family: var(--font-body);
+  background: var(--color-paper);
+  color: var(--color-ink);
+  outline: none;
+  margin-bottom: 1rem;
+}
+
+.search:focus {
+  border-color: var(--color-accent);
+}
+
+.group {
+  margin-bottom: 1.5rem;
+}
+
+.groupHeader {
+  font-family: var(--font-body);
+  font-size: 11px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--color-warm-gray);
+  padding: 0 0 0.5rem;
+  border-bottom: 1px solid var(--color-border);
+  margin-bottom: 0.25rem;
+}
+
+.fileRow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.fileRow:hover .fileActions {
+  opacity: 1;
+}
+
+.fileExt {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 500;
+  color: var(--color-accent);
+  background: var(--color-accent-light);
+  padding: 2px 5px;
+  border-radius: 3px;
+  min-width: 36px;
+  text-align: center;
+  flex-shrink: 0;
+}
+
+.fileName {
+  font-size: 14px;
+  color: var(--color-ink);
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.fileMeta {
+  font-size: 12px;
+  color: var(--color-warm-gray);
+  flex-shrink: 0;
+}
+
+.fileActions {
+  display: flex;
+  gap: 6px;
+  opacity: 0;
+  transition: opacity 0.15s;
+  flex-shrink: 0;
+}
+
+.actionBtn {
+  font-size: 12px;
+  padding: 4px 10px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  background: white;
+  color: var(--color-ink);
+  cursor: pointer;
+  font-family: var(--font-body);
+  transition: background 0.1s;
+}
+
+.actionBtn:hover {
+  background: var(--color-paper-alt);
+}
+
+.actionBtnDanger:hover {
+  background: var(--color-danger-light);
+  border-color: var(--color-danger);
+  color: var(--color-danger);
+}
+
+.empty {
+  font-size: 14px;
+  color: var(--color-warm-gray);
+  text-align: center;
+  padding: 2rem 0;
+}
+
+.toast {
+  position: fixed;
+  bottom: 1.5rem;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--color-ink);
+  color: white;
+  padding: 10px 20px;
+  border-radius: var(--radius-md);
+  font-size: 13px;
+  z-index: 100;
+  animation: fadeIn 0.2s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateX(-50%) translateY(8px); }
+  to   { opacity: 1; transform: translateX(-50%) translateY(0); }
+}

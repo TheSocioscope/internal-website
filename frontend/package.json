@@ -1,0 +1,40 @@
+{
+  "name": "socioscope-portal",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "deploy": "npm run build && gh-pages -d out"
+  },
+  "dependencies": {
+    "next": "14.2.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "@aws-sdk/client-s3": "^3.600.0",
+    "@aws-sdk/s3-request-presigner": "^3.600.0",
+    "@aws-sdk/client-dynamodb": "^3.600.0",
+    "@aws-sdk/lib-dynamodb": "^3.600.0",
+    "@tiptap/react": "^2.4.0",
+    "@tiptap/starter-kit": "^2.4.0",
+    "@tiptap/extension-placeholder": "^2.4.0",
+    "@tiptap/extension-link": "^2.4.0",
+    "uppy": "^3.25.0",
+    "@uppy/core": "^3.11.0",
+    "@uppy/react": "^3.3.0",
+    "@uppy/aws-s3": "^3.6.0",
+    "@uppy/drag-drop": "^3.1.0",
+    "@uppy/progress-bar": "^3.1.0",
+    "jose": "^5.4.0",
+    "date-fns": "^3.6.0",
+    "clsx": "^2.1.1"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "@types/react": "^18.2.0",
+    "@types/react-dom": "^18.2.0",
+    "typescript": "^5.0.0",
+    "gh-pages": "^6.1.1"
+  }
+}
