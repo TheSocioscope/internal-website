@@ -116,7 +116,7 @@ async function verifyOtp(event) {
     .setExpirationTime(`${SESSION_DAYS}d`)
     .sign(JWT_SECRET)
 
-  const cookieValue = `session=${jwt}; HttpOnly; Secure; SameSite=Strict; Max-Age=${SESSION_DAYS * 86400}; Path=/`
+  const cookieValue = `session=${jwt}; HttpOnly; Secure; SameSite=None; Max-Age=${SESSION_DAYS * 86400}; Path=/`
 
   return response(200, { ok: true }, { 'Set-Cookie': cookieValue })
 }
@@ -137,7 +137,7 @@ async function me(event) {
 
 // POST /auth/logout
 async function logout() {
-  const cookieValue = `session=; HttpOnly; Secure; SameSite=Strict; Max-Age=0; Path=/`
+  const cookieValue = `session=; HttpOnly; Secure; SameSite=None; Max-Age=0; Path=/`
   return response(200, { ok: true }, { 'Set-Cookie': cookieValue })
 }
 

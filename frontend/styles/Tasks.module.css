@@ -92,6 +92,21 @@
   padding: 1px 7px;
 }
 
+.colAction {
+  font-size: 13px;
+  color: var(--color-warm-gray);
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0 2px;
+  line-height: 1;
+  opacity: 0;
+  transition: opacity 0.15s, color 0.15s;
+}
+
+.colHeader:hover .colAction { opacity: 1; }
+.colAction:hover { color: var(--color-accent); }
+
 .cards {
   display: flex;
   flex-direction: column;

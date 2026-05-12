@@ -1,6 +1,7 @@
 import Head from 'next/head'
 import { useState, useEffect, FormEvent } from 'react'
 import Layout from '../components/layout/Layout'
+import FileBrowser from '../components/files/FileBrowser'
 import { resources as resourcesApi, Resource } from '../lib/api'
 
 export default function ResourcesPage() {
@@ -89,6 +90,11 @@ export default function ResourcesPage() {
         )}
 
         <style>{`.delete-btn { opacity: 0; transition: opacity 0.15s; } *:hover > .delete-btn { opacity: 1; }`}</style>
+
+        <section style={{ marginTop: '2.5rem' }}>
+          <h2 style={{ fontFamily: 'var(--font-display)', fontSize: '1.1rem', fontWeight: 400, marginBottom: '1rem' }}>Files</h2>
+          <FileBrowser prefix="resources/" />
+        </section>
       </Layout>
     </>
   )

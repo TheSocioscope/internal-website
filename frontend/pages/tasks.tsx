@@ -17,6 +17,9 @@ export default function TasksPage() {
   const [newCardTitle, setNewCardTitle] = useState('')
   const [newCardAssignee, setNewCardAssignee] = useState('')
   const [dragging, setDragging] = useState<Card | null>(null)
+  const [editingColumn, setEditingColumn] = useState<string | null>(null)
+  const [editingColumnName, setEditingColumnName] = useState('')
+  const [confirmDeleteColumn, setConfirmDeleteColumn] = useState<string | null>(null)
 
   useEffect(() => {
     tasksApi.listBoards().then(async r => {
@@ -40,10 +43,6 @@ export default function TasksPage() {
   async function createBoard(e: FormEvent) {
     e.preventDefault()
     const board = await tasksApi.createBoard(newBoardName)
-    // Create default columns
-    for (let i = 0; i < DEFAULT_COLUMNS.length; i++) {
-      await tasksApi.createColumn(board.id, DEFAULT_COLUMNS[i], i)
-    }
     setBoards(prev => [...prev, board])
     setNewBoardName('')
     setCreatingBoard(false)
@@ -74,6 +73,23 @@ export default function TasksPage() {
   async function deleteCard(id: string) {
     await tasksApi.deleteCard(id)
     setCards(prev => prev.filter(c => c.id !== id))
+  }
+
+  async function saveColumnName(col: Column) {
+    if (!editingColumnName.trim() || editingColumnName === col.name) {
+      setEditingColumn(null)
+      return
+    }
+    const updated = await tasksApi.updateColumn(col.id, { name: editingColumnName })
+    setColumns(prev => prev.map(c => c.id === col.id ? { ...c, name: updated.name } : c))
+    setEditingColumn(null)
+  }
+
+  async function deleteColumn(col: Column) {
+    await tasksApi.deleteColumn(col.id)
+    setColumns(prev => prev.filter(c => c.id !== col.id))
+    setCards(prev => prev.filter(c => c.columnId !== col.id))
+    setConfirmDeleteColumn(null)
   }
 
   function onDragOver(e: React.DragEvent, colId: string) {
@@ -143,8 +159,43 @@ export default function TasksPage() {
                   onDrop={e => onDrop(e, col.id)}
                 >
                   <div className={styles.colHeader}>
-                    <span className={styles.colName}>{col.name}</span>
-                    <span className={styles.colCount}>{colCards.length}</span>
+                    {editingColumn === col.id ? (
+                      <input
+                        value={editingColumnName}
+                        onChange={e => setEditingColumnName(e.target.value)}
+                        onBlur={() => saveColumnName(col)}
+                        onKeyDown={e => {
+                          if (e.key === 'Enter') saveColumnName(col)
+                          if (e.key === 'Escape') setEditingColumn(null)
+                        }}
+                        autoFocus
+                        className={styles.input}
+                        style={{ fontSize: 13, fontWeight: 600, width: '100%' }}
+                      />
+                    ) : confirmDeleteColumn === col.id ? (
+                      <div style={{ display: 'flex', alignItems: 'center', gap: 6, width: '100%' }}>
+                        <span style={{ fontSize: 12, color: 'var(--color-warm-gray)', flex: 1 }}>Delete "{col.name}"?</span>
+                        <button onClick={() => deleteColumn(col)} style={{ fontSize: 11, padding: '2px 7px', background: 'var(--color-accent)', color: 'white', border: 'none', borderRadius: 'var(--radius-sm)', cursor: 'pointer' }}>Yes</button>
+                        <button onClick={() => setConfirmDeleteColumn(null)} style={{ fontSize: 11, padding: '2px 7px', border: '1px solid var(--color-border)', background: 'white', borderRadius: 'var(--radius-sm)', cursor: 'pointer' }}>No</button>
+                      </div>
+                    ) : (
+                      <>
+                        <span className={styles.colName}>{col.name}</span>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
+                          <span className={styles.colCount}>{colCards.length}</span>
+                          <button
+                            onClick={() => { setEditingColumn(col.id); setEditingColumnName(col.name) }}
+                            className={styles.colAction}
+                            title="Rename"
+                          >✎</button>
+                          <button
+                            onClick={() => setConfirmDeleteColumn(col.id)}
+                            className={styles.colAction}
+                            title="Delete column"
+                          >×</button>
+                        </div>
+                      </>
+                    )}
                   </div>
 
                   <div className={styles.cards}>
