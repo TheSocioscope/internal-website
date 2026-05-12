@@ -2,6 +2,7 @@ import { useState, FormEvent } from 'react'
 import { useRouter } from 'next/router'
 import Head from 'next/head'
 import { auth } from '../lib/api'
+import { useAuth } from '../lib/auth'
 import styles from '../styles/Login.module.css'
 
 type Step = 'email' | 'otp' | 'loading'
@@ -13,6 +14,7 @@ export default function LoginPage() {
   const [pendingToken, setPendingToken] = useState('')
   const [error, setError] = useState('')
   const router = useRouter()
+  const { refresh } = useAuth()
 
   async function handleEmailSubmit(e: FormEvent) {
     e.preventDefault()
@@ -34,6 +36,7 @@ export default function LoginPage() {
     setStep('loading')
     try {
       await auth.verifyOtp(pendingToken, otp)
+      await refresh()
       router.push('/')
     } catch {
       setError('Invalid or expired code. Please try again.')
