@@ -70,7 +70,7 @@ export default function DocumentsPage() {
 
         <section>
           <h2 style={{ fontFamily: 'var(--font-display)', fontSize: '1.1rem', fontWeight: 400, marginBottom: '1rem' }}>Uploaded files</h2>
-          <FileBrowser prefix="documents/" />
+          <FileBrowser prefix="documents/" hierarchical />
         </section>
       </Layout>
     </>

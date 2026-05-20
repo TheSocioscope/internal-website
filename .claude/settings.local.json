@@ -1,7 +1,17 @@
 {
   "permissions": {
     "allow": [
-      "Bash(grep -E \"\\\\.\\(json|js|ts|tsx|jsx|md\\)$\")"
+      "Bash(grep -E \"\\\\.\\(json|js|ts|tsx|jsx|md\\)$\")",
+      "Bash(git config *)",
+      "Bash(git fetch *)",
+      "Bash(git branch *)",
+      "Bash(npx tsc *)",
+      "Bash(npx --prefix frontend tsc --noEmit)",
+      "Bash(node --check backend/auth/index.js)",
+      "Bash(node --check \"C:/Users/ssekhsaria/Documents/socioscope-internal-website/backend/auth/index.js\")",
+      "Bash(node --check \"C:/Users/ssekhsaria/Documents/socioscope-internal-website/scripts/sync-allowed-emails.js\")",
+      "Bash(npx --prefix \"C:/Users/ssekhsaria/Documents/socioscope-internal-website/frontend\" tsc --noEmit)",
+      "Bash(node --check \"C:/Users/ssekhsaria/Documents/socioscope-internal-website/backend/files/index.js\")"
     ]
   }
 }

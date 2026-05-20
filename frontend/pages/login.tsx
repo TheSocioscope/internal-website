@@ -24,8 +24,8 @@ export default function LoginPage() {
       const { pendingToken: token } = await auth.requestOtp(email)
       setPendingToken(token)
       setStep('otp')
-    } catch {
-      setError('Failed to send code. Please try again.')
+    } catch (err) {
+      setError(err instanceof Error && err.message ? err.message : 'Failed to send code. Please try again.')
       setStep('email')
     }
   }
@@ -38,8 +38,8 @@ export default function LoginPage() {
       await auth.verifyOtp(pendingToken, otp)
       await refresh()
       router.push('/')
-    } catch {
-      setError('Invalid or expired code. Please try again.')
+    } catch (err) {
+      setError(err instanceof Error && err.message ? err.message : 'Invalid or expired code. Please try again.')
       setStep('otp')
     }
   }

@@ -1,6 +1,7 @@
 const nodemailer = require('nodemailer')
 const { DynamoDBClient } = require('@aws-sdk/client-dynamodb')
 const { DynamoDBDocumentClient, PutCommand, GetCommand, DeleteCommand } = require('@aws-sdk/lib-dynamodb')
+const { SSMClient, GetParameterCommand } = require('@aws-sdk/client-ssm')
 const { SignJWT, jwtVerify } = require('jose')
 const crypto = require('crypto')
 
@@ -13,12 +14,26 @@ const transporter = nodemailer.createTransport({
 })
 
 const dynamo = DynamoDBDocumentClient.from(new DynamoDBClient({ region: process.env.AWS_REGION }))
+const ssm = new SSMClient({ region: process.env.AWS_REGION })
 
 const JWT_SECRET = new TextEncoder().encode(process.env.JWT_SECRET)
-const ALLOWED_EMAILS = new Set(JSON.parse(process.env.ALLOWED_EMAILS || '[]'))
+const ALLOWED_EMAILS_PARAM = process.env.ALLOWED_EMAILS_PARAM
+const ALLOWLIST_TTL_MS = 60_000
 const TABLE = `${process.env.DYNAMODB_TABLE_PREFIX}otp_tokens`
 const OTP_TTL_SECONDS = 600
 const SESSION_DAYS = 30
+
+let allowlistCache = { set: null, expiresAt: 0 }
+
+async function getAllowedEmails() {
+  const now = Date.now()
+  if (allowlistCache.set && allowlistCache.expiresAt > now) return allowlistCache.set
+  const res = await ssm.send(new GetParameterCommand({ Name: ALLOWED_EMAILS_PARAM }))
+  const raw = res.Parameter?.Value || ''
+  const list = raw.split(',').map(e => e.trim().toLowerCase()).filter(Boolean)
+  allowlistCache = { set: new Set(list), expiresAt: now + ALLOWLIST_TTL_MS }
+  return allowlistCache.set
+}
 
 function generateOtp() {
   return String(crypto.randomInt(100000, 999999))
@@ -45,7 +60,8 @@ function response(statusCode, body, extraHeaders = {}) {
 async function requestOtp(event) {
   const { email } = JSON.parse(event.body || '{}')
 
-  if (!email || !ALLOWED_EMAILS.has(email.toLowerCase())) {
+  const allowed = await getAllowedEmails()
+  if (!email || !allowed.has(email.toLowerCase())) {
     return response(400, { error: 'Email not authorised' })
   }
 

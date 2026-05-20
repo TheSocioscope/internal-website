@@ -8,7 +8,12 @@ async function req<T>(path: string, options?: RequestInit): Promise<T> {
   })
   if (!res.ok) {
     if (res.status === 401) window.location.href = '/login'
-    throw new Error(`API error ${res.status}: ${path}`)
+    let serverMessage = ''
+    try {
+      const body = await res.clone().json()
+      if (body && typeof body.error === 'string') serverMessage = body.error
+    } catch {}
+    throw new Error(serverMessage || `API error ${res.status}: ${path}`)
   }
   return res.json()
 }
@@ -31,6 +36,14 @@ export const auth = {
 export const files = {
   list: (prefix: string) =>
     req<{ files: FileItem[] }>(`/files?prefix=${encodeURIComponent(prefix)}`),
+  listHierarchical: (prefix: string) =>
+    req<{ files: FileItem[]; folders: FolderItem[] }>(
+      `/files?prefix=${encodeURIComponent(prefix)}&delimiter=${encodeURIComponent('/')}`,
+    ),
+  createFolder: (key: string) =>
+    req<{ ok: boolean; key: string }>('/files/folder', {
+      method: 'POST', body: JSON.stringify({ key }),
+    }),
   getUploadUrl: (key: string, contentType: string) =>
     req<{ url: string; key: string }>('/files/upload-url', {
       method: 'POST', body: JSON.stringify({ key, contentType }),
@@ -39,6 +52,10 @@ export const files = {
     req<{ url: string }>(`/files/download-url?key=${encodeURIComponent(key)}`),
   delete: (key: string) =>
     req(`/files?key=${encodeURIComponent(key)}`, { method: 'DELETE' }),
+  rename: (fromKey: string, toKey: string) =>
+    req<{ ok: boolean; key: string }>('/files/rename', {
+      method: 'POST', body: JSON.stringify({ fromKey, toKey }),
+    }),
 }
 
 // ── Announcements ─────────────────────────────────────────────────────────────
@@ -144,6 +161,11 @@ export interface FileItem {
   size: number
   lastModified: string
   uploadedBy?: string
+}
+
+export interface FolderItem {
+  key: string  // ends with '/'
+  name: string
 }
 
 export interface Announcement {

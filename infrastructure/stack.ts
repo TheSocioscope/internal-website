@@ -7,11 +7,13 @@ import * as apigateway from 'aws-cdk-lib/aws-apigateway'
 import * as kms from 'aws-cdk-lib/aws-kms'
 import * as logs from 'aws-cdk-lib/aws-logs'
 import * as ssm from 'aws-cdk-lib/aws-ssm'
+import * as iam from 'aws-cdk-lib/aws-iam'
 import { Construct } from 'constructs'
 import * as path from 'path'
 
+const ALLOWED_EMAILS_PARAM = '/socioscope/allowed-emails'
+
 interface SocioscopeStackProps extends cdk.StackProps {
-  allowedEmails: string[]
   frontendUrl: string
 }
 
@@ -91,7 +93,6 @@ export class SocioscopeStack extends cdk.Stack {
       DYNAMODB_TABLE_PREFIX: 'socioscope_',
       S3_BUCKET: bucket.bucketName,
       FRONTEND_URL: props.frontendUrl,
-      ALLOWED_EMAILS: JSON.stringify(props.allowedEmails.map(e => e.toLowerCase())),
       KMS_KEY_ID: credentialsKey.keyId,
       JWT_SECRET: jwtSecret,
       GMAIL_USER: gmailUser,
@@ -113,8 +114,16 @@ export class SocioscopeStack extends cdk.Stack {
     const authFn = new NodejsFunction(this, 'AuthFn', {
       ...lambdaDefaults,
       entry: path.join(__dirname, '../backend/auth/index.js'),
+      environment: {
+        ...sharedEnv,
+        ALLOWED_EMAILS_PARAM,
+      },
     })
     otpTable.grantReadWriteData(authFn)
+    authFn.addToRolePolicy(new iam.PolicyStatement({
+      actions: ['ssm:GetParameter'],
+      resources: [`arn:aws:ssm:${this.region}:${this.account}:parameter${ALLOWED_EMAILS_PARAM}`],
+    }))
 
     const filesFn = new NodejsFunction(this, 'FilesFn', {
       ...lambdaDefaults,

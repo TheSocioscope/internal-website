@@ -4,6 +4,97 @@
   gap: 0;
 }
 
+.breadcrumbBar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 8px 0 14px;
+  border-bottom: 1px solid var(--color-border);
+  margin-bottom: 1rem;
+}
+
+.breadcrumbs {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  font-size: 13px;
+  color: var(--color-warm-gray);
+}
+
+.crumbWrap {
+  display: inline-flex;
+  align-items: center;
+}
+
+.crumb {
+  background: none;
+  border: none;
+  padding: 2px 4px;
+  font-family: var(--font-body);
+  font-size: 13px;
+  color: var(--color-accent);
+  cursor: pointer;
+}
+
+.crumb:hover:not(:disabled) {
+  text-decoration: underline;
+}
+
+.crumb:disabled {
+  color: var(--color-ink);
+  cursor: default;
+}
+
+.crumbSep {
+  color: var(--color-border-strong);
+  padding: 0 2px;
+}
+
+.folderList {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 4px;
+}
+
+.folderRow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.folderRow:hover .fileActions {
+  opacity: 1;
+}
+
+.folderIcon {
+  color: var(--color-accent);
+  font-size: 12px;
+  width: 14px;
+  text-align: center;
+  flex-shrink: 0;
+}
+
+.folderName {
+  flex: 1;
+  text-align: left;
+  background: none;
+  border: none;
+  padding: 0;
+  font-family: var(--font-body);
+  font-size: 14px;
+  color: var(--color-ink);
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.folderName:hover {
+  color: var(--color-accent);
+  text-decoration: underline;
+}
+
 .uploadZone {
   border: 1.5px dashed var(--color-border-strong);
   border-radius: var(--radius-md);
@@ -143,6 +234,84 @@
   color: var(--color-warm-gray);
   text-align: center;
   padding: 2rem 0;
+}
+
+.modalOverlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(26, 25, 22, 0.55);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 200;
+  padding: 2rem;
+}
+
+.modal {
+  background: var(--color-paper);
+  border-radius: var(--radius-lg);
+  width: 100%;
+  max-width: 880px;
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+  box-shadow: var(--shadow-md);
+  overflow: hidden;
+}
+
+.modalHead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.9rem 1.2rem;
+  border-bottom: 1px solid var(--color-border);
+  background: white;
+}
+
+.modalTitle {
+  font-family: var(--font-display);
+  font-size: 1rem;
+  color: var(--color-ink);
+}
+
+.editor {
+  flex: 1;
+  width: 100%;
+  min-height: 360px;
+  padding: 1rem 1.2rem;
+  border: none;
+  outline: none;
+  resize: none;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  line-height: 1.55;
+  color: var(--color-ink);
+  background: white;
+}
+
+.modalFoot {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  padding: 0.75rem 1.2rem;
+  border-top: 1px solid var(--color-border);
+  background: var(--color-paper);
+}
+
+.saveBtn {
+  padding: 7px 18px;
+  background: var(--color-accent);
+  color: white;
+  border: none;
+  border-radius: var(--radius-md);
+  font-size: 13px;
+  font-family: var(--font-body);
+  cursor: pointer;
+}
+
+.saveBtn:disabled {
+  opacity: 0.6;
+  cursor: default;
 }
 
 .toast {
